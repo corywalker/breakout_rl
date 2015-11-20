@@ -14,9 +14,10 @@ def get_paddle_pos(screen):
             break
     for pos in range(xStart, 152):
         (r, g, b) = screen[189, pos]
+        xEnd = pos
         if ~((r == 200 and g == 72 and b == 72) or (r == 184 and g == 50 and b == 50)):
-            xEnd = pos
             break
+
     paddleX = (xEnd + xStart)/2
     return (paddleX, 189)
 
