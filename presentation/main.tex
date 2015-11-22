@@ -1,7 +1,10 @@
 \documentclass{beamer}
+\usepackage{amsmath}
+\usepackage{xcolor}
 
 \usetheme{default}
 \usecolortheme{beaver}
+\usefonttheme[onlymath]{serif}
 
 \title{Utilizing reinforcement learning techniques to play Atari's Breakout}
 \author{Andrew~Messing \and Ben~Brock \and Cory~Walker}
@@ -14,6 +17,9 @@
     \tableofcontents[currentsection,currentsubsection]
   \end{frame}
 }
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
 
 \begin{document}
 
@@ -29,7 +35,7 @@
 % and table of contents.
 \section{Feature extraction}
 
-\begin{frame}{First Slide Title}{Optional Subtitle}
+\begin{frame}{First Slide Title}
   \begin{itemize}
   \item {
     My first point.
@@ -40,7 +46,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{First Slide Title}{Optional Subtitle}
+\begin{frame}{First Slide Title}
   \begin{itemize}
   \item {
     My first point.
@@ -67,14 +73,55 @@ Here is an example of an example block.
 
 \section{Deep reinforcement learning}
 
-\begin{frame}{First Slide Title}{Optional Subtitle}
+\begin{frame}{Problem definition}
   \begin{itemize}
   \item {
-    My first point.
+    Learn Atari games from raw pixels
   }
   \item {
-    My second point.
+    Google DeepMind
   }
+  \item {
+      Naive state space: $128^{210 \cdot 160} \approx 1.799\times 10^{70802}$
+  }
+  \item {
+      Grayscale state space: $4^{210 \cdot 160} \approx 1.643\times 10^{20229}$
+  }
+  \item {
+      Scaled grayscale state space: $4^{105 \cdot 80} \approx 2.013\times 10^{5057}$
+  }
+  \item {
+    Still too huge
+  }
+  \item {
+    And partially observable
+  }
+  \item {
+    Generalization is essential
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{DQN variations}
+  \begin{itemize}
+  \item {
+      NIPS (late 2013) - original paper from workshop
+  }
+  \item {
+      Nature (early 2015) - Similar to NIPS, more conservative hyperparameters, model snapshotting
+  }
+  \item {
+      Double DQN (September 2015) - Attempts to address value overestimates
+  }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Double DQN formulation}
+  \[Y_t^{\textrm{DQN}} \equiv R_{t+1} + \gamma \textcolor{red}{\max_{a} Q(S_{t+1},a;\boldsymbol{\theta}_t^-)} \]
+  \[ \Downarrow \]
+  \[Y_t^{\textrm{DoubleDQN}} \equiv R_{t+1} + \gamma \textcolor{red}{Q(S_{t+1},\argmax_a Q(S_{t+1},a;\boldsymbol{\theta}_t),\boldsymbol{\theta}_t^-)} \]
+  \begin{itemize}
+    \item If $\boldsymbol{\theta}_t^- = \boldsymbol{\theta}_t$ (NIPS model), no difference
   \end{itemize}
 \end{frame}
 
@@ -114,26 +161,21 @@ Here is an example of an example block.
 
 \begin{frame}[allowframebreaks]
   \frametitle<presentation>{For Further Reading}
-    
+
   \begin{thebibliography}{10}
-    
+
   \beamertemplatebookbibitems
-  % Start with overview books.
 
-  \bibitem{Author1990}
-    A.~Author.
-    \newblock {\em Handbook of Everything}.
-    \newblock Some Press, 1990.
- 
-    
+  \bibitem{suttonbarto}
+    Sutton, R. S., \& Barto, A. G. (1998). \textit{Reinforcement learning: An introduction} (Vol. 1, No. 1). Cambridge: MIT press.
+
   \beamertemplatearticlebibitems
-  % Followed by interesting articles. Keep the list short. 
 
-  \bibitem{Someone2000}
-    S.~Someone.
-    \newblock On this and that.
-    \newblock {\em Journal of This and That}, 2(1):50--100,
-    2000.
+  \bibitem{dmnips}
+    Mnih, V., Kavukcuoglu, K., Silver, D., Graves, A., Antonoglou, I., Wierstra, D., \& Riedmiller, M. (2013). Playing Atari with deep reinforcement learning. \textit{arXiv preprint arXiv:1312.5602}.
+
+  \bibitem{dmdoubl}
+    van Hasselt, H., Guez, A., \& Silver, D. (2015). Deep Reinforcement Learning with Double Q-learning. \textit{arXiv preprint arXiv:1509.06461}.
   \end{thebibliography}
 \end{frame}
 
