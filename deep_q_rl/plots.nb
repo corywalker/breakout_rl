@@ -10,17 +10,301 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[       775,         34]
-NotebookOptionsPosition[       561,         21]
-NotebookOutlinePosition[       915,         37]
-CellTagsIndexPosition[       872,         34]
+NotebookDataLength[     11820,        327]
+NotebookOptionsPosition[     11336,        305]
+NotebookOutlinePosition[     11694,        321]
+CellTagsIndexPosition[     11651,        318]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "Import", "[", 
+   "\"\</Users/cwalker32/Code/breakout_rl/deep_q_rl/results.csv\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rewardper", "=", 
+   RowBox[{
+    RowBox[{
+    "Import", "[", 
+     "\"\</Users/cwalker32/Code/breakout_rl/deep_q_rl/results.csv\>\"", "]"}],
+     "[", 
+    RowBox[{"[", 
+     RowBox[{
+      RowBox[{"2", ";;"}], ",", "4"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"meanq", "=", 
+   RowBox[{
+    RowBox[{
+    "Import", "[", 
+     "\"\</Users/cwalker32/Code/breakout_rl/deep_q_rl/results.csv\>\"", "]"}],
+     "[", 
+    RowBox[{"[", 
+     RowBox[{
+      RowBox[{"2", ";;"}], ",", "5"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"rewardperplot", "=", 
+  RowBox[{"ListPlot", "[", 
+   RowBox[{"rewardper", ",", 
+    RowBox[{"PlotTheme", "\[Rule]", "\"\<Monochrome\>\""}], ",", 
+    RowBox[{"LabelStyle", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"FontFamily", "\[Rule]", "\"\<Times\>\""}], ",", 
+       RowBox[{"FontSize", "\[Rule]", "13"}], ",", 
+       InterpretationBox[
+        ButtonBox[
+         TooltipBox[
+          RowBox[{
+           GraphicsBox[{
+             {GrayLevel[0], RectangleBox[{0, 0}]}, 
+             {GrayLevel[0], RectangleBox[{1, -1}]}, 
+             {GrayLevel[0], RectangleBox[{0, -1}, {2, 1}]}},
+            AspectRatio->1,
+            Frame->True,
+            FrameStyle->GrayLevel[0.],
+            FrameTicks->None,
+            
+            ImageSize->
+             Dynamic[{
+              Automatic, 
+               1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                Magnification])}],
+            PlotRangePadding->None], "\[InvisibleSpace]"}],
+          "GrayLevel[0]"],
+         Appearance->None,
+         BaseStyle->{},
+         BaselinePosition->Baseline,
+         ButtonFunction:>With[{Typeset`box$ = EvaluationBox[]}, 
+           If[
+            Not[
+             AbsoluteCurrentValue["Deployed"]], 
+            SelectionMove[Typeset`box$, All, Expression]; 
+            FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+            FrontEnd`Private`$ColorSelectorInitialColor = GrayLevel[0]; 
+            FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+            MathLink`CallFrontEnd[
+              FrontEnd`AttachCell[Typeset`box$, 
+               FrontEndResource["GrayLevelColorValueSelector"], {
+               0, {Left, Bottom}}, {Left, Top}, 
+               "ClosingActions" -> {
+                "SelectionDeparture", "ParentChanged", "EvaluatorQuit"}]]]],
+         DefaultBaseStyle->{},
+         Evaluator->Automatic,
+         Method->"Preemptive"],
+        GrayLevel[0],
+        Editable->False,
+        Selectable->False]}], "}"}]}], ",", 
+    RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+    RowBox[{"AxesLabel", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Epoch\>\"", ",", "\"\<Average points\>\""}], "}"}]}]}], 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.657154472290482*^9, 3.65715451816883*^9}, {
+  3.657154609962064*^9, 3.6571546929674387`*^9}, {3.6571547601028433`*^9, 
+  3.657154785868586*^9}, {3.657154819507579*^9, 3.657154906047331*^9}, {
+  3.657155045314213*^9, 3.657155048022956*^9}, {3.65715509412985*^9, 
+  3.657155095957741*^9}, {3.657155268180687*^9, 3.6571552710828857`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{{}, {}, 
+     {GrayLevel[0], PointSize[0.012833333333333334`], AbsoluteThickness[1.6], 
+      Dashing[{}], CapForm["Butt"], LineBox[CompressedData["
+1:eJxTTMoPSmViYGAQBmIQDQEf7KecTdoYofPMHirgcEb5156Z7J+gfA6HpDnP
+K+c9l3KA8AUceoXypnLnaUP5Ig5c3Y+XHzUzhvIlHPSefLY5f9kBypdxOLD8
+jOqhyfZQvoKD0NbL8hsbYOqVHCSCSy66ijtC+SoOlbPunOi94wLlqznMmgkE
+O0OgfA2H9pLzuoWvgqF8LQel9ladlMJQKF/HYdLC/KrLu6OhfD2HbXePV+95
+ngDlGzhMNO1Nt1GOh/INHa5JOjk5NSVD+UYON0TyTUrjEqF8Ywdng9iSi75J
+DgBOik+4
+       "]]}}, {
+     {GrayLevel[0], AbsolutePointSize[6], AbsoluteThickness[1.6], Dashing[{}],
+       CapForm["Butt"], GeometricTransformationBox[InsetBox[
+        GraphicsBox[
+         {GrayLevel[0], AbsolutePointSize[6], AbsoluteThickness[1.6], 
+          Dashing[{}], CapForm["Butt"], 
+          DiskBox[{0, 0}, 
+           Offset[{2.75, 2.75}, {0., 0.}]]}], {0., 0.}], CompressedData["
+1:eJxTTMoPSmVmYGAQBmJGIGZigIEP9lPOJm2M0HlmDxVwOKP8a89M9k9QPodD
+0pznlfOeSzlA+AIOvUJ5U7nztKF8EQeu7sfLj5oZQ/kSDnpPPtucv+wA5cs4
+HFh+RvXQZHsoX8FBaOtl+Y0NMPVKDhLBJRddxR2hfBWHyll3TvTecYHy1Rxm
+zQSCnSFQvoZDe8l53cJXwVC+loNSe6tOSmEolK/jMGlhftXl3dFQvp7DtrvH
+q/c8T4DyDRwmmvam2yjHQ/mGDtcknZycmpKhfCOHGyL5JqVxiVC+sYOzQWzJ
+Rd8kBwBX/k+6
+       "]]}, {}}}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{
+    FormBox["\"Epoch\"", TraditionalForm], 
+    FormBox["\"Average points\"", TraditionalForm]},
+  AxesOrigin->{0, 0},
+  AxesStyle->GrayLevel[0],
+  BaseStyle->GrayLevel[0],
+  DisplayFunction->Identity,
+  Frame->{{False, False}, {False, False}},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameStyle->GrayLevel[0],
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  FrameTicksStyle->GrayLevel[0],
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0], 
+    AbsoluteThickness[1], 
+    AbsoluteDashing[{1, 2}]],
+  LabelStyle->{FontFamily -> "Times", FontSize -> 13, 
+    GrayLevel[0]},
+  Method->{},
+  PlotRange->{{0., 19.}, {0, 156.070588235}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic},
+  TicksStyle->GrayLevel[0]]], "Output",
+ CellChangeTimes->{{3.657154491068616*^9, 3.6571545209768867`*^9}, {
+   3.657154607617795*^9, 3.657154693414266*^9}, {3.657154769964074*^9, 
+   3.657154786505978*^9}, {3.657154842049329*^9, 3.65715490798597*^9}, 
+   3.657155049666525*^9, 3.65715509682524*^9, 3.657155271750023*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Export", "[", 
+   RowBox[{
+   "\"\</Users/cwalker32/Code/breakout_rl/presentation/dqn_rewardper.pdf\>\"",
+     ",", "rewardperplot"}], "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.65715505584551*^9, 3.657155102357483*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"ListPlot", "[", 
+   RowBox[{"meanq", ",", 
+    RowBox[{"PlotTheme", "\[Rule]", "\"\<Monochrome\>\""}], ",", 
+    RowBox[{"LabelStyle", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"FontFamily", "\[Rule]", "\"\<Times\>\""}], ",", 
+       RowBox[{"FontSize", "\[Rule]", "13"}], ",", 
+       InterpretationBox[
+        ButtonBox[
+         TooltipBox[
+          RowBox[{
+           GraphicsBox[{
+             {GrayLevel[0], RectangleBox[{0, 0}]}, 
+             {GrayLevel[0], RectangleBox[{1, -1}]}, 
+             {GrayLevel[0], RectangleBox[{0, -1}, {2, 1}]}},
+            AspectRatio->1,
+            Frame->True,
+            FrameStyle->GrayLevel[0.],
+            FrameTicks->None,
+            
+            ImageSize->
+             Dynamic[{
+              Automatic, 
+               1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                Magnification])}],
+            PlotRangePadding->None], "\[InvisibleSpace]"}],
+          "GrayLevel[0]"],
+         Appearance->None,
+         BaseStyle->{},
+         BaselinePosition->Baseline,
+         ButtonFunction:>With[{Typeset`box$ = EvaluationBox[]}, 
+           If[
+            Not[
+             AbsoluteCurrentValue["Deployed"]], 
+            SelectionMove[Typeset`box$, All, Expression]; 
+            FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+            FrontEnd`Private`$ColorSelectorInitialColor = GrayLevel[0]; 
+            FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+            MathLink`CallFrontEnd[
+              FrontEnd`AttachCell[Typeset`box$, 
+               FrontEndResource["GrayLevelColorValueSelector"], {
+               0, {Left, Bottom}}, {Left, Top}, 
+               "ClosingActions" -> {
+                "SelectionDeparture", "ParentChanged", "EvaluatorQuit"}]]]],
+         DefaultBaseStyle->{},
+         Evaluator->Automatic,
+         Method->"Preemptive"],
+        GrayLevel[0],
+        Editable->False,
+        Selectable->False]}], "}"}]}], ",", 
+    RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+    RowBox[{"AxesLabel", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Epoch\>\"", ",", "\"\<Mean Q\>\""}], "}"}]}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.6571549365228863`*^9, 3.65715493738521*^9}, {
+  3.657154976820814*^9, 3.65715497895432*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{{}, {}, 
+     {GrayLevel[0], PointSize[0.012833333333333334`], AbsoluteThickness[1.6], 
+      Dashing[{}], CapForm["Butt"], LineBox[CompressedData["
+1:eJxTTMoPSmViYGAQBmIQDQEf7MseRa1Ztv6gPVTAwaVjmf68Z5ehfA6HVR/L
+88ol70L5Ag5/lvGVNn58DeWLOJRONDac8/odlC/hUKrBvkh+/ycoX8bB/Ubr
+E95J36B8BYdo0VsfeNJ/QPlKDvKPhDeKX/wJ5as4dExPu+1S/QvKV3NgFZmk
+9bz5N5Sv4WDBOLtfX/YPlK/l0FNydvL9iL9Qvo6Db0jMhMDbMPP0HAJfS/4W
+ewBTb+CQluNWeWUejG/o0DTh0bKzZjC+kcOhN092MuyC2WfskMzi/4Wx8q89
+AO4qWPI=
+       "]]}}, {
+     {GrayLevel[0], AbsolutePointSize[6], AbsoluteThickness[1.6], Dashing[{}],
+       CapForm["Butt"], GeometricTransformationBox[InsetBox[
+        GraphicsBox[
+         {GrayLevel[0], AbsolutePointSize[6], AbsoluteThickness[1.6], 
+          Dashing[{}], CapForm["Butt"], 
+          DiskBox[{0, 0}, 
+           Offset[{2.75, 2.75}, {0., 0.}]]}], {0., 0.}], CompressedData["
+1:eJxTTMoPSmVmYGAQBmJGIGZigIEP9mWPotYsW3/QHirg4NKxTH/es8tQPofD
+qo/leeWSd6F8AYc/y/hKGz++hvJFHEonGhvOef0OypdwKNVgXyS//xOUL+Pg
+fqP1Ce+kb1C+gkO06K0PPOk/oHwlB/lHwhvFL/6E8lUcOqan3Xap/gXlqzmw
+ikzSet78G8rXcLBgnN2vL/sHytdy6Ck5O/l+xF8oX8fBNyRmQuBtmHl6DoGv
+JX+LPYCpN3BIy3GrvDIPxjd0aJrwaNlZMxjfyOHQmyc7GXbB7DN2SGbx/8JY
++dceAPeeWPQ=
+       "]]}, {}}}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{
+    FormBox["\"Epoch\"", TraditionalForm], 
+    FormBox["\"Mean Q\"", TraditionalForm]},
+  AxesOrigin->{0, 0},
+  AxesStyle->GrayLevel[0],
+  BaseStyle->GrayLevel[0],
+  DisplayFunction->Identity,
+  Frame->{{False, False}, {False, False}},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameStyle->GrayLevel[0],
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  FrameTicksStyle->GrayLevel[0],
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0], 
+    AbsoluteThickness[1], 
+    AbsoluteDashing[{1, 2}]],
+  LabelStyle->{FontFamily -> "Times", FontSize -> 13, 
+    GrayLevel[0]},
+  Method->{},
+  PlotRange->{{0., 19.}, {0, 1.84204287942}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic},
+  TicksStyle->GrayLevel[0]]], "Output",
+ CellChangeTimes->{3.6571549384010353`*^9, 3.657154979701827*^9}]
+}, Open  ]]
 },
 WindowSize->{808, 751},
-WindowMargins->{{36, Automatic}, {16, Automatic}},
+WindowMargins->{{Automatic, -947}, {Automatic, -336}},
 FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 29, \
 2015)",
 StyleDefinitions->"Default.nb"
@@ -36,9 +320,17 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 3328, 89, 132, "Input"],
+Cell[3911, 113, 2498, 59, 223, "Output"]
+}, Open  ]],
+Cell[6424, 175, 258, 6, 28, "Input"],
+Cell[CellGroupData[{
+Cell[6707, 185, 2336, 59, 81, "Input"],
+Cell[9046, 246, 2274, 56, 269, "Output"]
+}, Open  ]]
 }
 ]
 *)
 
 (* End of internal cache information *)
-
