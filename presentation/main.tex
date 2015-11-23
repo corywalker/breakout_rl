@@ -107,6 +107,7 @@ Here is an example of an example block.
     \centering
     \includegraphics[width=105mm]{deep_q_network.pdf}
   \end{figure}
+  \[ \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t+\alpha(Y_t^Q-Q(S_t,A_t;\boldsymbol{\theta}_t))\nabla_{\boldsymbol{\theta}_t}Q(S_t,A_t;\boldsymbol{\theta}_t) \]
 \end{frame}
 
 \begin{frame}{DQN variations}
@@ -125,6 +126,7 @@ Here is an example of an example block.
 
 \begin{frame}{Double DQN formulation}
   \begin{itemize}
+    \item max operator means we use same values for action selection and evaluation, want to decouple.
     \item Action-value function has weights $\boldsymbol{\theta}_t$
     \item Target action-value function has weights $\boldsymbol{\theta}_t^-$
     \item After every 10,000 training updates, $\boldsymbol{\theta}_t^- \leftarrow \boldsymbol{\theta}_t$
