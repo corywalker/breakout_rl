@@ -34,6 +34,11 @@ def get_ball_pos(screen):
                 break
     return (ballX, ballY)
 
+def move_left(ale, legal_actions):
+    return ale.act(legal_actions[4])
+def move_right(ale, legal_actions):
+    return ale.act(legal_actions[3])
+
 
 ale = ALEInterface()
 
@@ -60,6 +65,10 @@ legal_actions = ale.getLegalActionSet()
 screen_width, screen_height = ale.getScreenDims()
 
 i = 0
+noBall = 0
+
+ale.act(legal_actions[1])
+ale.act(legal_actions[1])
 
 while not ale.game_over():
     screen = ale.getScreenRGB()
@@ -67,16 +76,35 @@ while not ale.game_over():
     ballX, ballY = get_ball_pos(screen)
     paddleX, paddleY = get_paddle_pos(screen)
 
+    screen[ballY, ballX] = (255, 255, 255)
+    screen[paddleY, paddleX] = (255, 255, 255)
+
     if (not (ballX == -1 or ballY == -1)):
         print str(ballX) + "," + str(ballY)
-        screen[ballY, ballX] = (255, 255, 255)
     if (not (paddleX == -1 or paddleY == -1)):
         print str(paddleX) + "," + str(paddleY)
-        screen[paddleY, paddleX] = (255, 255, 255)
 
     image = Image.fromarray(screen)
     image.save("images/" + str(i) + ".png", "png")
     i += 1
 
-    a = legal_actions[randrange(len(legal_actions))]
-    reward = ale.act(a)
+    if (noBall > 60):
+        ale.act(legal_actions[1])
+        noBall = 0
+        continue
+
+    if (ballX == -1 or ballY == -1):
+        noBall += 1
+        ale.act(legal_actions[0])
+        continue
+    else:
+        noBall = 0
+
+    if (paddleX >= 138):
+        move_left(ale, legal_actions)
+    elif (ballX - paddleX > 5):
+        move_right(ale, legal_actions)
+    elif (ballX - paddleX < -5):
+        move_left(ale, legal_actions)
+    else:
+        ale.act(legal_actions[0])
