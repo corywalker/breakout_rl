@@ -139,7 +139,27 @@
 
 \begin{frame}{Q-Learning}
   \begin{itemize}
-    \item Initialize Q vector
+    \item[] Initialize $Q(s, a)$ arbitrarily
+    \item[] For each episode:
+    \item[] \hspace{2em} $e(s, a) = 0$ for all $s, a$
+    \item[] \hspace{2em} For each step:
+    \item[] \hspace{4em} Discover current state $s$ with IP, choose action $a$
+    \item[] \hspace{4em} Choose $a'$ for $s$ from $Q(s, a)$ ($\epsilon$-greedy)
+    \item[] \hspace{4em} Take action $a'$, observe $r$ and $s'$
+    \item[] \hspace{4em} $\delta = r + \gamma Q(s', a') - Q(s, a)$
+    \item[] \hspace{4em} $e(s, a) = e(s, a) + 1$
+    \item[] \hspace{4em} For all $s, a$:
+    \item[] \hspace{6em} $Q(s, a) = Q(s, a) + \alpha \delta e(s, a)$
+    \item[] \hspace{6em} $e(s) = \gamma \lambda e(s)$
+    \item[] \hspace{4em} $s = s'$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+  \begin{itemize}
+    \item We don't have any yet!
+    \item We will soon *fingers crossed*
+    \item There will be cool graphs
   \end{itemize}
 \end{frame}
 
