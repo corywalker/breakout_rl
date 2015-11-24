@@ -2,10 +2,15 @@
 \usepackage{amsmath}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tikz}
 
 \usetheme{default}
 \usecolortheme{beaver}
 \usefonttheme[onlymath]{serif}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
 \title{Utilizing reinforcement learning techniques to play Atari's Breakout}
 \author{Andrew~Messing \and Ben~Brock \and Cory~Walker}
@@ -34,23 +39,25 @@
 
 % Section and subsections will appear in the presentation overview
 % and table of contents.
-\section{Feature extraction}
 
-\begin{frame}{Atari Learning Environment}
+\section{Breakout}
+\begin{frame}{Breakout}
+  \begin{itemize}
+    \item Classic video game.  Developed by Atari.
+  \end{itemize}
+  \begin{center}
+  \includegraphics[width=50mm]{tmp.jpg}
+  \end{center}
+\end{frame}
+
+\section{Arcade Learning Environment}
+
+\begin{frame}{Arcade Learning Environment}
   \begin{itemize}
     \item Simple object-oriented framework that allows researchers and hobbyists to develop AI agents for Atari 2600 games
     \item Allows access to each frame of the game and the ability to respond with an action
     \item Also allows access to number of lives remaining, score of the game, if gameover, etc
   \end{itemize}
-\end{frame}
-
-\begin{frame}{Breakout}
-  \begin{itemize}
-    \item Video game developed by Atari, Inc.
-  \end{itemize}
-  \begin{center}
-  \includegraphics[width=50mm]{tmp.jpg}
-  \end{center}
 \end{frame}
 
 \begin{frame}{Actions}
@@ -66,6 +73,7 @@
   \end{itemize}
 \end{frame}
 
+\section{Feature extraction}
 \begin{frame}{Feature Extraction}
   \begin{itemize}
     \item{Image Processing to extract:}
@@ -82,16 +90,57 @@
 
 \section{Reinforcement learning}
 
-\begin{frame}{Blocks}
-\begin{block}{Block Title}
-You can also highlight sections of your presentation in a block, with it's own title
-\end{block}
-\begin{theorem}
-There are separate environments for theorems, examples, definitions and proofs.
-\end{theorem}
-\begin{example}
-Here is an example of an example block.
-\end{example}
+\begin{frame}{Environment}
+  \begin{itemize}
+    \item Image processing module accepts a pixel representation of a Breakout session as input
+    \item It outputs the coordinates of the paddle and ball
+  \end{itemize}
+  \vspace{2em}
+  \begin{itemize}
+    \item We choose $s = \text{ball}_{x} - \text{paddle}_{x}$ to determine the state
+    \item $s > 0 \implies \text{the ball is to the right}$
+    \item $s < 0 \implies \text{the ball is to the left}$
+  \end{itemize}
+  \vspace{2em}
+  \begin{itemize}
+    \item $s$ is mapped into a tabular state vector
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Actions}
+  \begin{itemize}
+    \item Move the paddle left
+    \item Move the paddle right
+    \item Hold the paddle still
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Rewards}
+  \begin{itemize}
+    \item -10 reward for losing the ball
+  \end{itemize}
+  \vspace{2em}
+  \begin{itemize}
+    \item This doesn't include rewards for eliminating blocks
+    \item Will simply focusing on hitting the ball be enough to play the game well? (Yes!)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Pipeline}
+  \centering
+  \begin{tikzpicture}[node distance=2cm]
+    \node (ale) [startstop] {ALE};
+    \node (start) [startstop, below of=ale] {Image Processing};
+    \node (middle) [startstop, below of=start] {Q-Learning};
+    \draw [arrow] (ale) -- (start);
+    \draw [arrow] (start) -- (middle);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Q-Learning}
+  \begin{itemize}
+    \item Initialize Q vector
+  \end{itemize}
 \end{frame}
 
 \section{Deep reinforcement learning}
@@ -207,7 +256,6 @@ Here is an example of an example block.
   \end{itemize}
   
 \end{frame}
-
 
 
 % All of the following is optional and typically not needed. 
