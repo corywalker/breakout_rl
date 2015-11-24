@@ -5,13 +5,14 @@ import numpy as np
 from PIL import Image
 
 class Game:
-    def __init__(self, alpha, gamma, epsilon):
+    def __init__(self, alpha, gamma, lambd, epsilon):
         # State values, intiialized arbitrarily
         self.values = np.random.rand(2, 8)
 
         # Hyperparameters
         self.alpha = alpha
         self.gamma = gamma
+        self.lambd = lambd
         self.epsilon = epsilon
 
         # Initialize ALE
@@ -21,9 +22,11 @@ class Game:
         self.paddleX = self.paddleY = -1
 
     # Run an episode
-    def run_episode(self):
+    def run_episode(self, record):
+        self.ale.setInt("random_seed", np.random.randint(32767))
         self.ale.loadROM('breakout.bin')
         self.legal_actions = self.ale.getLegalActionSet()
+        eligibility = np.zeros((2, 8))
 
         i = 0
         noBall = 0
@@ -39,7 +42,8 @@ class Game:
             reward = 0
             screen = self.ale.getScreenRGB()
 
-            self.write_screen(screen, i)
+            if record:
+                self.write_screen(screen, i)
             i += 1
 
             self.ballX, self.ballY = self.get_ball_pos(screen)
@@ -58,7 +62,11 @@ class Game:
                 self.ale.act(self.legal_actions[1])
                 noBall = 0
 
-                self.values[action][state] += self.alpha * (reward + self.gamma * self.get_best_action(newstate) - self.values[action][state])
+                delta = reward + self.gamma * self.values[self.get_action(newstate)][newstate] - self.values[action][state]
+
+                eligibility[a][s] += 1
+                self.update_etrace(eligibility, state, action, delta)
+
                 state = newstate = -1
                 action = newaction = -1
 
@@ -81,15 +89,18 @@ class Game:
             newaction = self.get_action(newstate)
 
             if state != -1:
-                self.values[action][state] += self.alpha * (reward + self.gamma * self.get_best_action(newstate) - self.values[action][state])
+                delta = reward + self.gamma * self.values[newaction][newstate] - self.values[action][state]
+                eligibility[action][state] += 1
+                self.update_etrace(eligibility, state, action, delta)
 
-            if self.get_best_action(newstate) == 0:
+            if newaction == 0:
                 self.move_left()
             else:
                 self.move_right()
 
             state = newstate
             action = newaction
+        return i
 
     def get_paddle_pos(self, screen):
         xStart = -1
@@ -145,22 +156,50 @@ class Game:
         return 6
 
     def get_best_action(self, state):
-        return max(self.values[0][state], self.values[1][state])
+        if self.values[0][state] > self.values[1][state]:
+            return 0
+        return 1
 
     def get_action(self, state):
         if np.random.rand() < self.epsilon:
-            return self.values[np.random.randint(2)][state]
+            return np.random.randint(2)
         return self.get_best_action(state)
 
     def write_screen(self, screen, i):
         # Save image for examination
         image = Image.fromarray(screen)
         image.save("images/" + str(i) + ".png", "png")
+
+    def sum_policy(self):
+        for i in xrange(0, 8):
+            if (self.get_best_action(i)):
+                print "left"
+            else:
+                print "right"
+
+    def update_etrace(self, eligibility, state, action, delta):
+        for a in xrange(0, 2):
+            for s in xrange(0, 8):
+                self.values[a][s] += self.alpha * delta * eligibility[a][s]
+                eligibility[a][s] *= self.gamma * self.lambd
  
 
 alpha = 0.1
 gamma = 0.7
+lambd = 0.7
 epsilon = 0.1
-breakout = Game(alpha, gamma, epsilon)
 
-breakout.run_episode()
+np.random.seed(0)
+np.set_printoptions(precision=3)
+
+breakout = Game(alpha, gamma, lambd, epsilon)
+
+for i in xrange(0, 100):
+    print i
+    print breakout.values
+    print breakout.sum_policy()
+    count = breakout.run_episode(False)
+    print str(i) + " : " + str(count) + " timesteps"
+
+self.epsilon = 0.0
+breakout.run_episode(True)
