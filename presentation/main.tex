@@ -1,6 +1,7 @@
 \documentclass{beamer}
 \usepackage{amsmath}
 \usepackage{xcolor}
+\usepackage{graphicx}
 
 \usetheme{default}
 \usecolortheme{beaver}
@@ -35,26 +36,48 @@
 % and table of contents.
 \section{Feature extraction}
 
-\begin{frame}{First Slide Title}
+\begin{frame}{Atari Learning Environment}
   \begin{itemize}
-  \item {
-    My first point.
-  }
-  \item {
-    My second point.
-  }
+    \item Simple object-oriented framework that allows researchers and hobbyists to develop AI agents for Atari 2600 games
+    \item Allows access to each frame of the game and the ability to respond with an action
+    \item Also allows access to number of lives remaining, score of the game, if gameover, etc
   \end{itemize}
 \end{frame}
 
-\begin{frame}{First Slide Title}
+\begin{frame}{Breakout}
   \begin{itemize}
-  \item {
-    My first point.
-  }
-  \item {
-    My second point.
-  }
+    \item Video game developed by Atari, Inc.
   \end{itemize}
+  \begin{center}
+  \includegraphics{tmp.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Actions}
+  \begin{itemize}
+  \item{Atari control is a joystick with a button on top and few menu buttons on the side}
+  \item{20 possible actions including the buttons being pressed and the joystick being moved in 8 directions}
+  \item{For breakout specifically we have 3 actions:}
+    \begin{itemize}
+      \item{Do nothing}
+      \item{Move left}
+      \item{Move right}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Feature Extraction}
+  \begin{itemize}
+    \item{Image Processing to extract:}
+    \begin{itemize}
+      \item{Paddle's X position}
+      \item{Ball's X position}
+      \item{Ball's Y position}
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+  \includegraphics[scale=.75]{tmp2.jpg}
+  \end{center}
 \end{frame}
 
 \section{Reinforcement learning}
