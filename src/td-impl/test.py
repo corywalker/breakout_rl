@@ -7,7 +7,7 @@ from PIL import Image
 class Game:
     def __init__(self, alpha, gamma, epsilon):
         # State values, intiialized arbitrarily
-        self.value = np.random.rand(2, 8)
+        self.values = np.random.rand(2, 8)
 
         # Hyperparameters
         self.alpha = alpha
@@ -23,7 +23,7 @@ class Game:
     # Run an episode
     def run_episode(self):
         self.ale.loadROM('breakout.bin')
-        self.legal_actions = ale.getLegalActionSet()
+        self.legal_actions = self.ale.getLegalActionSet()
 
         i = 0
         noBall = 0
@@ -32,15 +32,14 @@ class Game:
         action = newaction = -1
 
         # Fire to start the game
-        self.ale.act(legal_actions[1])
-        self.ale.act(legal_actions[1])
+        self.ale.act(self.legal_actions[1])
+        self.ale.act(self.legal_actions[1])
 
-        while not gameOver
-            screen = ale.getScreenRGB()
+        while not gameOver:
+            reward = 0
+            screen = self.ale.getScreenRGB()
 
-            # Save image for examination
-            image = Image.fromarray(screen)
-            image.save("images/" + str(i) + ".png", "png")
+            self.write_screen(screen, i)
             i += 1
 
             self.ballX, self.ballY = self.get_ball_pos(screen)
@@ -50,32 +49,47 @@ class Game:
             screen[self.ballY, self.ballX] = (255, 255, 255)
             screen[self.paddleY, self.paddleX] = (255, 255, 255)
 
-            newstate = get_state(self.ballX - self.paddleX)
+            newstate = self.get_state(self.ballX - self.paddleX)
 
             # Whoops, you died.
             if (noBall > 60):
                 reward = -10
                 newstate = 7
-                self.ale.act(legal_actions[1])
+                self.ale.act(self.legal_actions[1])
                 noBall = 0
 
-                self.values[action][state] = self.values[action][state] + self.alpha * (reward + self.gamma * )
+                self.values[action][state] += self.alpha * (reward + self.gamma * self.get_best_action(newstate) - self.values[action][state])
+                state = newstate = -1
+                action = newaction = -1
 
                 if self.ale.game_over():
                     gameOver = True
                 continue
 
             # Ignore this timestep; can't see ball.
-            if (ballX == -1 or ballY == -1):
+            if (self.ballX == -1 or self.ballY == -1):
                 noBall += 1
-                ale.act(legal_actions[0])
+                self.ale.act(self.legal_actions[0])
                 continue
             else:
                 noBall = 0
 
             # Paddle is out of game area. Ignore timestep and readjust.
-            if (paddleX >= 138):
-                move_left(ale, legal_actions)
+            if (self.paddleX >= 138):
+                self.move_left()
+
+            newaction = self.get_action(newstate)
+
+            if state != -1:
+                self.values[action][state] += self.alpha * (reward + self.gamma * self.get_best_action(newstate) - self.values[action][state])
+
+            if self.get_best_action(newstate) == 0:
+                self.move_left()
+            else:
+                self.move_right()
+
+            state = newstate
+            action = newaction
 
     def get_paddle_pos(self, screen):
         xStart = -1
@@ -108,10 +122,10 @@ class Game:
                     break
         return (self.ballX, self.ballY)
 
-    def move_left(self,):
+    def move_left(self):
         self.ale.act(self.legal_actions[4])
         return 0
-    def move_right(self,):
+    def move_right(self):
         self.ale.act(self.legal_actions[3])
         return 1
 
@@ -136,4 +150,17 @@ class Game:
     def get_action(self, state):
         if np.random.rand() < self.epsilon:
             return self.values[np.random.randint(2)][state]
-        return get_best_action(state)
+        return self.get_best_action(state)
+
+    def write_screen(self, screen, i):
+        # Save image for examination
+        image = Image.fromarray(screen)
+        image.save("images/" + str(i) + ".png", "png")
+ 
+
+alpha = 0.1
+gamma = 0.7
+epsilon = 0.1
+breakout = Game(alpha, gamma, epsilon)
+
+breakout.run_episode()
