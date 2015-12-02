@@ -21,8 +21,11 @@ class Game:
         self.ballX = self.ballY = -1
         self.paddleX = self.paddleY = -1
 
+        self.episode_num = 0
+
     # Run an episode
     def run_episode(self, record):
+        self.episode_num += 1
         self.ale.setInt("random_seed", np.random.randint(32767))
         self.ale.loadROM('breakout.bin')
         self.legal_actions = self.ale.getLegalActionSet()
@@ -64,7 +67,7 @@ class Game:
 
                 delta = reward + self.gamma * self.values[self.get_action(newstate)][newstate] - self.values[action][state]
 
-                eligibility[a][s] += 1
+                eligibility[action][state] += 1
                 self.update_etrace(eligibility, state, action, delta)
 
                 state = newstate = -1
@@ -168,7 +171,7 @@ class Game:
     def write_screen(self, screen, i):
         # Save image for examination
         image = Image.fromarray(screen)
-        image.save("images/" + str(i) + ".png", "png")
+        image.save("images/e" + str(self.episode_num) + "_" + str(i) + ".png", "png")
 
     def sum_policy(self):
         for i in xrange(0, 8):
@@ -198,8 +201,8 @@ for i in xrange(0, 100):
     print i
     print breakout.values
     print breakout.sum_policy()
-    count = breakout.run_episode(False)
+    count = breakout.run_episode(True)
     print str(i) + " : " + str(count) + " timesteps"
 
-self.epsilon = 0.0
+breakout.epsilon = 0.0
 breakout.run_episode(True)
