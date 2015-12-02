@@ -25,6 +25,7 @@ class Game:
 
     # Run an episode
     def run_episode(self, record):
+        self.gameScore = 0
         self.episode_num += 1
         self.ale.setInt("random_seed", np.random.randint(32767))
         self.ale.loadROM('breakout.bin')
@@ -38,8 +39,8 @@ class Game:
         action = newaction = -1
 
         # Fire to start the game
-        self.ale.act(self.legal_actions[1])
-        self.ale.act(self.legal_actions[1])
+        self.gameScore += self.ale.act(self.legal_actions[1])
+        self.gameScore += self.ale.act(self.legal_actions[1])
 
         while not gameOver:
             reward = 0
@@ -62,7 +63,7 @@ class Game:
             if (noBall > 60):
                 reward = -10
                 newstate = 7
-                self.ale.act(self.legal_actions[1])
+                self.gameScore += self.ale.act(self.legal_actions[1])
                 noBall = 0
 
                 delta = reward + self.gamma * self.values[self.get_action(newstate)][newstate] - self.values[action][state]
@@ -80,7 +81,7 @@ class Game:
             # Ignore this timestep; can't see ball.
             if (self.ballX == -1 or self.ballY == -1):
                 noBall += 1
-                self.ale.act(self.legal_actions[0])
+                self.gameScore += self.ale.act(self.legal_actions[0])
                 continue
             else:
                 noBall = 0
@@ -103,7 +104,7 @@ class Game:
 
             state = newstate
             action = newaction
-        return i
+        return self.gameScore
 
     def get_paddle_pos(self, screen):
         xStart = -1
@@ -137,10 +138,10 @@ class Game:
         return (self.ballX, self.ballY)
 
     def move_left(self):
-        self.ale.act(self.legal_actions[4])
+        self.gameScore += self.ale.act(self.legal_actions[4])
         return 0
     def move_right(self):
-        self.ale.act(self.legal_actions[3])
+        self.gameScore += self.ale.act(self.legal_actions[3])
         return 1
 
     def get_state(self, dist):
