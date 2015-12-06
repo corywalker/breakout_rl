@@ -87,10 +87,27 @@
 \end{abstract}
 
 \section{Introduction}
-Some type of introduction goes here. Andrew, could you take care of this?
+Deep Reinforment Learning is a relatively new approach to learn to control agents via high dimensional sensory inputs like vision in speech. This project compares success of a specific feature based reinforcement learning approach to a deep reinforcement learning one using the atari game breakout and the Arcade Learning Environment.
 
 \section{Breakout and feature extraction}
-Andrew's section goes here.
+\subsection{Breakout}
+Breakout is a classic arcade game developed by Atari, Inc. Similar to pong the object is to use a paddle to bounce a ball; however for breakout the paddle move horizontally and is positioned at the bottom of the screen. At the top of the screen are multiple layers of bricks. Everytime the ball collides with a brick it breaks it and the player gains points. The goal of the game is to break all the bricks, score points, and not let the ball fall below the paddle as that costs the user a life. When all the lives are gone the game is over.
+
+  \begin{center}
+  \includegraphics[width=50mm]{tmp.jpg}
+  \end{center}
+
+\subsection{Arcade Learning Environment}
+The Arcade Learning Environment (ALE) is a simple object-oriented framework designed to allow researchers to test Artificial Intelligence agents to play Atari 2600 games. The agent can receive the game frames and ram and is given access to the number of lives, the score, and other information from the game. Then the agent can use this to come with an action that it would send back to the ALE. The controller that is simulated contains a joystick, an action button, and a couple of menu buttons that total to about 20 possible actions including the buttons being pressed and the joystick being moved in one of eight directions.
+
+For breakout specifically there are three actions that contribute to the game: move the joystick left, move the joystick right, and do nothing.
+
+\subsection{Feature Extraction}
+To extract features for the non-Deep reinforcement learning agent image processing was used to capture the paddle and the ball's position. While the paddle maintained one of two colors making it relatively easy to extract, the ball changes colors as it goes by the brick layers to the color of that brick layer and when it is in open space to the color of the paddle. 
+
+  \begin{center}
+  \includegraphics[scale=.75]{tmp2.jpg}
+  \end{center}
 
 \section{Reinforcement learning}
 Ben's section goes here.
