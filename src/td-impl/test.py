@@ -6,8 +6,8 @@ from PIL import Image
 
 class Game:
     def __init__(self, alpha, gamma, lambd, epsilon):
-        # State values, intiialized arbitrarily
-        self.values = np.random.rand(2, 8)
+        # State-action values, intiialized arbitrarily
+        self.values = np.random.rand(3, 8)
 
         # Hyperparameters
         self.alpha = alpha
@@ -30,7 +30,7 @@ class Game:
         self.ale.setInt("random_seed", np.random.randint(32767))
         self.ale.loadROM('breakout.bin')
         self.legal_actions = self.ale.getLegalActionSet()
-        eligibility = np.zeros((2, 8))
+        eligibility = np.zeros((3, 8))
 
         i = 0
         noBall = 0
@@ -99,12 +99,14 @@ class Game:
 
             if newaction == 0:
                 self.move_left()
-            else:
+            elif newaction == 1:
                 self.move_right()
+            elif newaction == 2:
+                self.move_noop()
 
             state = newstate
             action = newaction
-        return self.gameScore
+        return (i, self.gameScore)
 
     def get_paddle_pos(self, screen):
         xStart = -1
@@ -143,6 +145,9 @@ class Game:
     def move_right(self):
         self.gameScore += self.ale.act(self.legal_actions[3])
         return 1
+    def move_noop(self):
+        self.gameScore += self.ale.act(self.legal_actions[0])
+        return 2
 
     def get_state(self, dist):
         if dist < -7:
@@ -160,29 +165,35 @@ class Game:
         return 6
 
     def get_best_action(self, state):
-        if self.values[0][state] > self.values[1][state]:
-            return 0
-        return 1
+        maxValue = -1
+        maxAct = 0
+        for i in xrange(0, 3):
+            if maxValue == -1 or self.values[i][state] > maxValue:
+                maxValue = self.values[i][state]
+                maxAct = i
+        return maxAct
 
     def get_action(self, state):
         if np.random.rand() < self.epsilon:
-            return np.random.randint(2)
+            return np.random.randint(3)
         return self.get_best_action(state)
 
     def write_screen(self, screen, i):
         # Save image for examination
         image = Image.fromarray(screen)
-        image.save("images/e" + str(self.episode_num) + "_" + str(i) + ".png", "png")
+        image.save("train_noop/e" + str(self.episode_num) + "_" + str(i) + ".png", "png")
 
     def sum_policy(self):
         for i in xrange(0, 8):
-            if (self.get_best_action(i)):
+            if (self.get_best_action(i) == 0):
                 print "left"
-            else:
+            elif (self.get_best_action(i) == 1):
                 print "right"
+            elif (self.get_best_action(i) == 2):
+                print "noop"
 
     def update_etrace(self, eligibility, state, action, delta):
-        for a in xrange(0, 2):
+        for a in xrange(0, 3):
             for s in xrange(0, 8):
                 self.values[a][s] += self.alpha * delta * eligibility[a][s]
                 eligibility[a][s] *= self.gamma * self.lambd
@@ -198,12 +209,12 @@ np.set_printoptions(precision=3)
 
 breakout = Game(alpha, gamma, lambd, epsilon)
 
-for i in xrange(0, 100):
+for i in xrange(0, 1000):
     print i
     print breakout.values
     print breakout.sum_policy()
-    count = breakout.run_episode(True)
-    print str(i) + " : " + str(count) + " timesteps"
+    count, score = breakout.run_episode(True)
+    print str(i) + " : " + str(count) + " timesteps, " + str(score) + " score"
 
 breakout.epsilon = 0.0
 breakout.run_episode(True)
