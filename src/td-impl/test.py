@@ -17,6 +17,8 @@ class Game:
 
         # Initialize ALE
         self.ale = ALEInterface()
+        self.ale.loadROM('breakout.bin')
+        self.ale.setInt("random_seed", np.random.randint(32767))
 
         self.ballX = self.ballY = -1
         self.paddleX = self.paddleY = -1
@@ -27,8 +29,6 @@ class Game:
     def run_episode(self, record):
         self.gameScore = 0
         self.episode_num += 1
-        self.ale.setInt("random_seed", np.random.randint(32767))
-        self.ale.loadROM('breakout.bin')
         self.legal_actions = self.ale.getLegalActionSet()
         eligibility = np.zeros((3, 8))
 
@@ -106,6 +106,7 @@ class Game:
 
             state = newstate
             action = newaction
+        self.ale.reset_game()
         return (i, self.gameScore)
 
     def get_paddle_pos(self, screen):
@@ -130,13 +131,11 @@ class Game:
         self.ballX = -1
         self.ballY = -1
 
-        for x in range(8, 151):
-            for y in range(50, 189):
-                (r, g, b) = screen[y, x]
-                if(r == 184 and g == 50 and b == 50):
-                    self.ballX = x+1
-                    self.ballY = y+2
-                    break
+        equalpix = np.equal(screen[50:189,8:151], np.array([184,50,50])).all(2)
+        if equalpix.any():
+            first = (equalpix.nonzero()+np.array([[50+2],[8+2]]))[:,0]
+            self.ballY, self.ballX = first
+
         return (self.ballX, self.ballY)
 
     def move_left(self):
