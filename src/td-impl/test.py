@@ -17,6 +17,8 @@ class Game:
 
         # Initialize ALE
         self.ale = ALEInterface()
+        self.ale.setInt("random_seed", np.random.randint(32767))
+        self.ale.loadROM('breakout.bin')
 
         self.ballX = self.ballY = -1
         self.paddleX = self.paddleY = -1
@@ -27,8 +29,6 @@ class Game:
     def run_episode(self, record):
         self.gameScore = 0
         self.episode_num += 1
-        self.ale.setInt("random_seed", np.random.randint(32767))
-        self.ale.loadROM('breakout.bin')
         self.legal_actions = self.ale.getLegalActionSet()
         eligibility = np.zeros((3, 8))
 
@@ -43,6 +43,7 @@ class Game:
         self.gameScore += self.ale.act(self.legal_actions[1])
 
         while not gameOver:
+            # print "step!"
             reward = 0
             screen = self.ale.getScreenRGB()
 
@@ -70,6 +71,7 @@ class Game:
 
                 eligibility[action][state] += 1
                 self.update_etrace(eligibility, state, action, delta)
+                # print "No ball", self.values
 
                 state = newstate = -1
                 action = newaction = -1
@@ -82,6 +84,7 @@ class Game:
             if (self.ballX == -1 or self.ballY == -1):
                 noBall += 1
                 self.gameScore += self.ale.act(self.legal_actions[0])
+                # print "ball not seen"
                 continue
             else:
                 noBall = 0
@@ -96,6 +99,7 @@ class Game:
                 delta = reward + self.gamma * self.values[newaction][newstate] - self.values[action][state]
                 eligibility[action][state] += 1
                 self.update_etrace(eligibility, state, action, delta)
+            # print "Normal operation", self.values
 
             if newaction == 0:
                 self.move_left()
@@ -106,6 +110,7 @@ class Game:
 
             state = newstate
             action = newaction
+        self.ale.reset_game()
         return (i, self.gameScore)
 
     def get_paddle_pos(self, screen):
@@ -130,6 +135,7 @@ class Game:
         self.ballX = -1
         self.ballY = -1
 
+        '''
         for x in range(8, 151):
             for y in range(50, 189):
                 (r, g, b) = screen[y, x]
@@ -137,6 +143,15 @@ class Game:
                     self.ballX = x+1
                     self.ballY = y+2
                     break
+        '''
+        equalpix = np.equal(screen[50:189,8:151], np.array([184,50,50])).all(2)
+        if equalpix.any():
+            first = (equalpix.nonzero()+np.array([[50+2],[8+2]]))[:,0]
+            self.ballY, self.ballX = first
+        # print self.ballY, self.ballX
+        # import code
+        # code.interact(local=locals())
+        # import IPython; IPython.embed()
         return (self.ballX, self.ballY)
 
     def move_left(self):
@@ -213,7 +228,7 @@ for i in xrange(0, 1000):
     print i
     print breakout.values
     print breakout.sum_policy()
-    count, score = breakout.run_episode(True)
+    count, score = breakout.run_episode(False)
     print str(i) + " : " + str(count) + " timesteps, " + str(score) + " score"
 
 breakout.epsilon = 0.0
