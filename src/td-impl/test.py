@@ -7,7 +7,7 @@ from PIL import Image
 class Game:
     def __init__(self, alpha, gamma, lambd, epsilon):
         # State-action values, intiialized arbitrarily
-        self.values = np.random.rand(3, 8)
+        self.values = np.random.rand(3, 7)
 
         # Hyperparameters
         self.alpha = alpha
@@ -30,7 +30,7 @@ class Game:
         self.gameScore = 0
         self.episode_num += 1
         self.legal_actions = self.ale.getLegalActionSet()
-        eligibility = np.zeros((3, 8))
+        eligibility = np.zeros((3, 7))
 
         i = 0
         noBall = 0
@@ -62,7 +62,7 @@ class Game:
             # Whoops, you died.
             if (noBall > 60):
                 reward = -10
-                newstate = 7
+                newstate = state
                 self.gameScore += self.ale.act(self.legal_actions[1])
                 noBall = 0
 
@@ -101,7 +101,7 @@ class Game:
                 self.move_left()
             elif newaction == 1:
                 self.move_right()
-            elif newaction == 2:
+            else:
                 self.move_noop()
 
             state = newstate
@@ -149,17 +149,17 @@ class Game:
         return 2
 
     def get_state(self, dist):
-        if dist < -7:
+        if dist < -15:
             return 0
-        if dist in [-7, -6, -5]:
+        if dist in [-15, -14, -13, -12, -11, -10]:
             return 1
-        if dist in [-4, -3, -2]:
+        if dist in [-9, -8, -7, -6, -5, -4]:
             return 2
-        if dist in [-1, 0, 1]:
+        if dist in [-3, -2, -1, 0, 1, 2]:
             return 3
-        if dist in [2, 3, 4]:
+        if dist in [3, 4, 5, 6, 7, 8]:
             return 4
-        if dist in [5, 6, 7]:
+        if dist in [9, 10, 11, 12, 13, 14]:
             return 5
         return 6
 
@@ -180,10 +180,10 @@ class Game:
     def write_screen(self, screen, i):
         # Save image for examination
         image = Image.fromarray(screen)
-        image.save("train_noop/e" + str(self.episode_num) + "_" + str(i) + ".png", "png")
+        image.save("train_frameskip/e" + str(self.episode_num) + "_" + str(i) + ".png", "png")
 
     def sum_policy(self):
-        for i in xrange(0, 8):
+        for i in xrange(0, 7):
             if (self.get_best_action(i) == 0):
                 print "left"
             elif (self.get_best_action(i) == 1):
@@ -193,12 +193,12 @@ class Game:
 
     def update_etrace(self, eligibility, state, action, delta):
         for a in xrange(0, 3):
-            for s in xrange(0, 8):
+            for s in xrange(0, 7):
                 self.values[a][s] += self.alpha * delta * eligibility[a][s]
                 eligibility[a][s] *= self.gamma * self.lambd
  
 
-alpha = 0.1
+alpha = 0.01
 gamma = 0.7
 lambd = 0.7
 epsilon = 0.1
@@ -206,14 +206,17 @@ epsilon = 0.1
 np.random.seed(0)
 np.set_printoptions(precision=3)
 
-breakout = Game(alpha, gamma, lambd, epsilon)
-
 for i in xrange(0, 1000):
-    print i
-    print breakout.values
-    print breakout.sum_policy()
-    count, score = breakout.run_episode(True)
-    print str(i) + " : " + str(count) + " timesteps, " + str(score) + " score"
+    if (i % 10 == 0):
+        breakout = Game(alpha, gamma, lambd, epsilon)
+        for j in xrange(0, i):
+            print j
+            print breakout.values
+            print breakout.sum_policy()
+            count, score = breakout.run_episode(False)
+            print str(j) + " : " + str(count) + " timesteps, " + str(score) + " score"
 
-breakout.epsilon = 0.0
-breakout.run_episode(True)
+        print "TEST TRIAL:"
+        breakout.epsilon = 0.0
+        count, score = breakout.run_episode(True)
+        print str(i) + " : " + str(count) + " timesteps, " + str(score) + " score"
