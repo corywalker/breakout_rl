@@ -108,7 +108,7 @@ For breakout specifically there are three actions that contribute to the game: m
 To extract features for the non-Deep reinforcement learning agent image processing was used to capture the paddle and the ball's position. While the paddle maintained one of two colors making it relatively easy to extract, the ball changes colors as it goes by the brick layers to the color of that brick layer and when it is in open space to the color of the paddle. 
 
   \begin{center}
-  \includegraphics[scale=.75]{tmp2.jpg}
+  \includegraphics[width=50mm]{tmp2.jpg}
   \end{center}
 
 \section{Reinforcement learning}
@@ -136,13 +136,13 @@ Ben's section goes here. Be sure to cite Sutton at some point \cite{sutton}.
   \end{enumerate}
 
 \subsection{DQN variations}
-  DeepMind first presented their version of the Deep Q network at the NIPS Deep Learning Workshop in late 2013. In this paper they train the network on seven Atari games, surpassing a human expert on three of them. The network described in this paper requires roughly 24 hours of training for a game on a standard GPU.\\
+DeepMind first presented their version of the Deep Q network at the NIPS Deep Learning Workshop in late 2013 \cite{dmnips}. In this paper they train the network on seven Atari games, surpassing a human expert on three of them. The network described in this paper requires roughly 24 hours of training for a game on a standard GPU.\\
 
-  In early 2015, DeepMind published a paper in Nature which updates the network structure originally defined. The new network is similar to the NIPS one, but it features much more conservative hyperparameters (increasing training time to a week) and first describes model freezing. \\
+In early 2015, DeepMind published a paper in Nature which updates the network structure originally defined \cite{dmnature}. The new network is similar to the NIPS one, but it features much more conservative hyperparameters (increasing training time to a week) and first describes model freezing. \\
 
 Model freezing is a technique that separates the action-value function into two functions with the same structure but different weights. The main action-value function has weights $\boldsymbol{\theta}_t$ and the target action-value function has weights $\boldsymbol{\theta}_t^-$. Every 10,000 training updates we set $\boldsymbol{\theta}_t^- \leftarrow \boldsymbol{\theta}_t$ to keep the target action-value function in sync with the main one. It is possible that the NIPS version used model freezing as well, but the paper made no mention of it and therefore the implementations of the NIPS-described DQN do not feature model freezing. \\
 
-In September 2015, DeepMind updated the algorithm described in Nature to address value overestimates. They call this algorithm Double DQN, and this is the algorithm that we will implement and apply to Atari Breakout.
+In September 2015, DeepMind updated the algorithm described in Nature to address value overestimates \cite{dmdoubl}. They call this algorithm Double DQN, and this is the algorithm that we will implement and apply to Atari Breakout.
 
 \subsection{Double DQN formulation}
   The motivation behind Double Q-learning is that max operator uses the same values for action selection and evaluation, which can cause an issue with overoptimistic value estimates, especially with function approximation. If all action-values are uniformly overestimated, this would not affect the policy. The authors of the Double DQN paper argue that the overestimations are not uniform, leading to suboptimal policies. Double Q learning attempts to address these overestimations by decoupling action selection from action evaluation. While traditional Double Q-learning involves training two different value functions, van Hasselt et. al. argue that the same effect can be achieved for DQN with the following change to the target function $Y_t$:
@@ -174,6 +174,17 @@ We trained both a DQN and a Double DQN on Atari Breakout for about 20 hours:
     \includegraphics[width=120mm]{dqn_meanq.pdf}
   \end{figure}
 
+  A member of the open source community, Alejandro Dubrovsky, was kind enough to run an evaluation on Space Invaders, both with and without Double Q learning:
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=120mm]{dqn_si_rewardper.pdf}
+  \end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=120mm]{dqn_si_meanq.pdf}
+  \end{figure}
+  It seems clear that the implementation of Double Q learning performs better than previous implementations, at least in \texttt{deep\_q\_rl}. The average scores are higher, and the maximum scores are also higher. The maintainer of the codebase plans on merging in the changes this month.
+
 \section{Design challenges}
 The computational burden of Deep Q learning can be cost prohibitive on a small budget. The amount of computation also increases development turnaround time, since often only one set of changes can be tried in a day. \\
 
@@ -185,8 +196,9 @@ A summary goes here.
 
 \begin{thebibliography}{1}
 \bibitem{ale} Marc G. Bellemare, Yavar Naddaf, Joel Veness, and Michael Bowling. {\em The Arcade Learning Environment: An Evaluation Platform for General Agents}. In Journal of Artificial Intelligence Research 47, pp. 253-279, 2013.
-\bibitem{sutton} R. S. Sutton and A. G. Barto, {\em Reinforcement Learning: An Introduction}. Cambridge, MA: MIT Press, 1998.
 \bibitem{dmnips} Mnih, V., Kavukcuoglu, K., Silver, D., Graves, A., Antonoglou, I., Wierstra, D., \& Riedmiller, M. (2013). Playing Atari with deep reinforcement learning. \textit{arXiv preprint arXiv:1312.5602}.
+\bibitem{dmnature} Mnih, Volodymyr, et al. {\em Human-level control through deep reinforcement learning}. Nature 518.7540 (2015): 529-533.
+\bibitem{sutton} R. S. Sutton and A. G. Barto, {\em Reinforcement Learning: An Introduction}. Cambridge, MA: MIT Press, 1998.
 \bibitem{dmdoubl} van Hasselt, H., Guez, A., \& Silver, D. (2015). Deep Reinforcement Learning with Double Q-learning. \textit{arXiv preprint arXiv:1509.06461}.
 \end{thebibliography}
 
