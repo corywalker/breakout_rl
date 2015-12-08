@@ -131,7 +131,7 @@ We have chosen this formulation because of its simplicity.  While a truly optima
 \subsection{Q-Learning Method}
 We use Q-learning with eligibility traces to train our RL agent to solve Breakout \cite{sutton}.  For data structures, we keep a vector $Q(s, a)$ of state-action values.  For each episode, we also maintain a vector $e(s, a)$ of eligibility traces for each state-action pair.  When we initialize our RL agent, we initialize our $Q$ vector with random values between 0 and 1.  At the start of each episode, we initialize an eligibility trace $e(s, a)$ with all zeros.  Then, for each step, we discover the current state $s$ using our custom image processing.  The agent remembers a previous action $a$ from the last timestep.  Then, the agent picks a new action $a'$ from $Q(s, a)$ using an $\epsilon$-greedy policy.  From this action, the agent observes a reward $r$.  The agent estimates a change in state value, $\delta$, using the reward $r$ and the difference in state values.  It then increases the eligibility of the current state $s$.  Then, for every state, the agent will update the value of the state in accordance with its eligibility and the difference in state value $\delta$ the agent just experienced.  See Figure \ref{qlearn:code} for a concise technical description of the RL method used.
 
-\begin{figure}[H]
+\begin{figure}
     \centering
     \caption{Q-learning method used to train our RL agent.}
     \begin{itemize}
@@ -156,12 +156,14 @@ We use Q-learning with eligibility traces to train our RL agent to solve Breakou
 \subsubsection{Hyperparameters}
 We trained our RL agent using the hyperparameters $\alpha = 0.01$, $\gamma = 0.9$, $\lambda = 0.9$, and $\epsilon = 0.01$.  We started off with hyperparameters of $\alpha = 0.1$, $\gamma = 0.7$, $\lambda = 0.9$, and $\epsilon = 0.1$ and randomly modified them until we arrived at the new hyperparameters, which train and converge much more readily than the original ones.  A major problem with the original hyperparameters was that the agent would converge very quickly to what we could observe is a good policy, then diverge from it, randomly cycling through subpar policies.  Lowering the step size $\alpha$ resulted in more stable training.  We hypothesize that the larger step size is in an issue because of the very large number of times the RL agent visits each state.  We also increased $\gamma$ and $\lambda$, which together control the decay of the eligibility trace.  Because the agent may perform a sub-optimal action and then visit many other states before a negative reward is received (the agent loses a life), it is important that states remain eligible so that a bad state-action pair can be recognized.  In addition, we hypothesize that lowering the value of $\epsilon$ allows bad state-action pairs to be isolated and recognized.
 \subsubsection{Training and Performance}
-We found that our RL agent, trained with the above hyperparameters, converged to a near-optimal policy after about 50 episodes, which corresponds to about 25 minutes of gameplay.  The maximum score that our RL agent attained was around 150 points.  You can watch a video of our RL agent training here: .
+We found that our RL agent, trained with the above hyperparameters, converged to a near-optimal policy after about 50 episodes, which corresponds to about 25 minutes of gameplay.  The maximum score that our RL agent attained was around 150 points.  You can watch a video of our RL agent training here: \href{https://youtu.be/A8vXLnMaowI}{https://youtu.be/A8vXLnMaowI}.  See Figure \ref{qlearn:train} for a graph of the agent's score at each step of the training process.  In the figure, each epoch of the graph is an episode, which corresponds to approximately 3 minutes of gameplay.
 
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=120mm]{ql_reward.pdf}
-  \end{figure}
+\begin{figure}
+  \centering
+  \caption{Q-learning agent training.  Each epoch is an episode, or around 3 minutes of gameplay.}
+  \includegraphics[width=120mm]{ql_reward.pdf}
+  \label{qlearn:train}
+\end{figure}
 
 \section{Deep reinforcement learning}
   While manual feature extraction can result in faster training and potentially better performance, there is a large motivation to be able to learn from general and high dimensional inputs such as video and sound. If we could learn to play Atari games from raw pixels, we could use the same algorithm on an array of games, even games we have never actually played before. \\
@@ -231,9 +233,9 @@ We trained both a DQN and a Double DQN on Atari Breakout for about 20 hours. A v
   It seems clear that the implementation of Double Q learning performs better than previous implementations, at least in \texttt{deep\_q\_rl}. The average scores are higher, and the maximum scores are also higher. The maintainer of the codebase plans on merging in the changes this month.
 
 \section{Design challenges}
-The computational burden of Deep Q learning can be cost prohibitive on a small budget. The amount of computation also increases development turnaround time, since often only one set of changes can be tried in a day. \\
-
-Put more design challenges here.
+The computational burden of Deep Q learning can be cost prohibitive on a small budget. The amount of computation also increases development turnaround time, since often only one set of changes can be tried in a day.
+\\\\
+For basic Q-learning, manual feature extraction and state space simplification is required.  This must be done for each game that you wish your RL agent to play.  While training is very fast compared to deep reinforcement learning methods, the performance may be capped at a certain level if the manual processing does not represent the complex state completely.  However, simple reinforcement learning can offer near optimal performance with a small amount of development effort.
 
 \section{Summary}
 We conclude that using manual feature extraction certainly leads to faster training time, but it is not necessarily better than using a more general learning algorithm such as Double DQN. This is because manual feature extraction requires domain knowledge and it relies on humans who often make mistakes or overlook features that may be important.
