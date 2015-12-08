@@ -129,9 +129,9 @@ In our formulation of Breakout, the RL agent has three possible states, which ar
 \\\\
 We have chosen this formulation because of its simplicity.  While a truly optimal Breakout player may use the position of the bricks to inform its decisions about how to hit the ball, it is our hypothesis that a player which simply attempts to hit the ball may be very nearly optimal.  We wish to demonstrate that a very simple formulation may achieve high performance if it is well-tuned to the attributes of the system.
 \subsection{Q-Learning Method}
-We use Q-learning with elligibility traces to train our RL agent to solve Breakout \cite{sutton}.  For data structures, we keep a vector $Q(s, a)$ of state-action values.  For each episode, we also maintain a vector $e(s, a)$ of elligibility traces for each state-action pair.  When we initialize our RL agent, we initialize our $Q$ vector with random values between 0 and 1.  At the start of each episode, we initialize an elligibility trace $e(s, a)$ with all zeros.  Then, for each step, we discover the current state $s$ using our custom image processing.  The agent remembers a previous action $a$ from the last timestep.  Then, the agent picks a new action $a'$ from $Q(s, a)$ using an $\epsilon$-greedy policy.  From this action, the agent observes a reward $r$.  The agent estimates a change in state value, $\delta$, using the reward $r$ and the difference in state values.  It then increases the elligibility of the current state $s$.  Then, for every state, the agent will update the value of the state in accordance with its elligibility and the difference in state value $\delta$ the agent just experienced.  See Figure \ref{qlearn:code} for a concise technical description of the RL method used.
+We use Q-learning with eligibility traces to train our RL agent to solve Breakout \cite{sutton}.  For data structures, we keep a vector $Q(s, a)$ of state-action values.  For each episode, we also maintain a vector $e(s, a)$ of eligibility traces for each state-action pair.  When we initialize our RL agent, we initialize our $Q$ vector with random values between 0 and 1.  At the start of each episode, we initialize an eligibility trace $e(s, a)$ with all zeros.  Then, for each step, we discover the current state $s$ using our custom image processing.  The agent remembers a previous action $a$ from the last timestep.  Then, the agent picks a new action $a'$ from $Q(s, a)$ using an $\epsilon$-greedy policy.  From this action, the agent observes a reward $r$.  The agent estimates a change in state value, $\delta$, using the reward $r$ and the difference in state values.  It then increases the eligibility of the current state $s$.  Then, for every state, the agent will update the value of the state in accordance with its eligibility and the difference in state value $\delta$ the agent just experienced.  See Figure \ref{qlearn:code} for a concise technical description of the RL method used.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \caption{Q-learning method used to train our RL agent.}
     \begin{itemize}
@@ -154,9 +154,14 @@ We use Q-learning with elligibility traces to train our RL agent to solve Breako
 
 \subsection{Results}
 \subsubsection{Hyperparameters}
-We trained our RL agent using the hyperparameters $\alpha = 0.01$, $\gamma = 0.9$, $\lambda = 0.9$, and $\epsilon = 0.01$.  We started off with hyperparameters of $\alpha = 0.1$, $\gamma = 0.7$, $\lambda = 0.9$, and $\epsilon = 0.1$ and randomly modified them until we arrived at the new hyperparameters, which train and converge much more readily than the original ones.  A major problem with the original hyperparameters was that the agent would converge very quickly to what we could observe is a good policy, then diverge from it, randomly cycling through subpar policies.  Lowering the step size $\alpha$ resulted in more stable training.  We hypothesize that the larger step size is in an issue because of the very large number of times the RL agent visits each state.  We also increased $\gamma$ and $\lambda$, which together control the decay of the elligibility trace.  Because the agent may perform a sub-optimal action and then visit many other states before a negative reward is received (the agent looses a life), it is important that states remain elligible so that a bad state-action pair can be recognized.  In addition, we hypothesize that lowering the value of $\epsilon$ allows bad state-action pairs to be isolated and recognized.
+We trained our RL agent using the hyperparameters $\alpha = 0.01$, $\gamma = 0.9$, $\lambda = 0.9$, and $\epsilon = 0.01$.  We started off with hyperparameters of $\alpha = 0.1$, $\gamma = 0.7$, $\lambda = 0.9$, and $\epsilon = 0.1$ and randomly modified them until we arrived at the new hyperparameters, which train and converge much more readily than the original ones.  A major problem with the original hyperparameters was that the agent would converge very quickly to what we could observe is a good policy, then diverge from it, randomly cycling through subpar policies.  Lowering the step size $\alpha$ resulted in more stable training.  We hypothesize that the larger step size is in an issue because of the very large number of times the RL agent visits each state.  We also increased $\gamma$ and $\lambda$, which together control the decay of the eligibility trace.  Because the agent may perform a sub-optimal action and then visit many other states before a negative reward is received (the agent loses a life), it is important that states remain eligible so that a bad state-action pair can be recognized.  In addition, we hypothesize that lowering the value of $\epsilon$ allows bad state-action pairs to be isolated and recognized.
 \subsubsection{Training and Performance}
 We found that our RL agent, trained with the above hyperparameters, converged to a near-optimal policy after about 50 episodes, which corresponds to about 25 minutes of gameplay.  The maximum score that our RL agent attained was around 150 points.  You can watch a video of our RL agent training here: .
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=120mm]{ql_reward.pdf}
+  \end{figure}
 
 \section{Deep reinforcement learning}
   While manual feature extraction can result in faster training and potentially better performance, there is a large motivation to be able to learn from general and high dimensional inputs such as video and sound. If we could learn to play Atari games from raw pixels, we could use the same algorithm on an array of games, even games we have never actually played before. \\
@@ -205,7 +210,7 @@ We performed our testing on an EC2 g2.2xlarge instance equipped with a single NV
 Our open source implementation of Double DQN can be viewed and commented on by visiting the pull request at \href{https://github.com/spragunr/deep_q_rl/pull/52}{https://github.com/spragunr/deep\_q\_rl/pull/52}. The fork with the implementation is located at \href{https://github.com/corywalker/deep_q_rl}{https://github.com/corywalker/deep\_q\_rl}.
 
 \subsection{Results}
-We trained both a DQN and a Double DQN on Atari Breakout for about 20 hours:
+We trained both a DQN and a Double DQN on Atari Breakout for about 20 hours. A video of the agent playing, along with realtime value estimates, can be viewed here: \href{https://www.youtube.com/watch?v=UXurvvDY93o}{https://www.youtube.com/watch?v=UXurvvDY93o}. Here are some plots of the training over time:
   \begin{figure}[H]
     \centering
     \includegraphics[width=120mm]{dqn_rewardper.pdf}
@@ -222,10 +227,6 @@ We trained both a DQN and a Double DQN on Atari Breakout for about 20 hours:
   \begin{figure}[H]
     \centering
     \includegraphics[width=120mm]{dqn_si_rewardper.pdf}
-  \end{figure}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=120mm]{dqn_si_meanq.pdf}
   \end{figure}
   It seems clear that the implementation of Double Q learning performs better than previous implementations, at least in \texttt{deep\_q\_rl}. The average scores are higher, and the maximum scores are also higher. The maintainer of the codebase plans on merging in the changes this month.
 
