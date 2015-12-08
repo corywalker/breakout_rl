@@ -89,35 +89,35 @@
 \pagebreak
 
 \begin{abstract}
-We demonstrate the performance of two different reinforcement learning methods, basic Q-learning using manual image processing and deep Q-learning using raw pixel input, on Atari's Breakout.  While deep reinforcement learning techniques may be generalizable across games and ultimately result in optimal performance, they require a large amount of computational resources and time for training.  By performing manual image processing to derive states, we show that similar performance can be achieved in less time using basic Q-learning.
+We demonstrate the performance of two different reinforcement learning methods, basic Q-learning using manual image processing and deep Q-learning using raw pixel input, on Atari's Breakout.  While deep reinforcement learning techniques may be generalizable across games and ultimately result in near-optimal performance, they require a large amount of computational resources and time for training.  By performing manual image processing to derive states, we show that similar performance can be achieved in less time using basic Q-learning.
 \end{abstract}
 
 \section{Introduction}
-Deep Reinforment Learning is a relatively new approach to learn to control agents via high dimensional sensory inputs like vision and speech. This project compares the success of a specific feature based reinforcement learning approach to a deep reinforcement learning one using the atari game Breakout and the Arcade Learning Environment.
+Deep Reinforment Learning is a relatively new approach to learn to control agents via high dimensional sensory inputs like vision and speech. This project compares the success of a specific feature based reinforcement learning approach to a deep reinforcement learning one using the Atari game Breakout and the Arcade Learning Environment.
 
 \section{Breakout and feature extraction}
 \subsection{Breakout}
-Breakout is a classic arcade game developed by Atari, Inc. Similar to pong the objective is to use a paddle to bounce a ball; however for breakout the paddle moves horizontally and is positioned at the bottom of the screen. At the top of the screen are multiple layers of bricks. Everytime the ball collides with a brick it breaks it and the player gains points. The goal of the game is to break all the bricks, score points, and not let the ball fall below the paddle as that costs the user a life. When all the lives are gone the game is over.
+Breakout is a classic arcade game developed by Atari, Inc. Similar to Pong the objective is to use a paddle to bounce a ball; however for Breakout the paddle moves horizontally and is positioned at the bottom of the screen. At the top of the screen are multiple layers of bricks. Everytime the ball collides with a brick it breaks it and the player gains points. The goal of the game is to break all the bricks, score points, and not let the ball fall below the paddle as that costs the player a life. When all the lives are gone the game is over. \\
 
 \begin{figure}[H]
   \centering
-  \caption{The Breakout setup.}
   \includegraphics[width=50mm]{tmp.jpg}
+  \caption{The Breakout setup.}
   \label{breakout:simple}
 \end{figure}
 
 \subsection{Arcade Learning Environment}
-The Arcade Learning Environment (ALE) is a simple object-oriented framework designed to allow researchers to test Artificial Intelligence agents to play Atari 2600 games \cite{ale}. The agent can receive the game frames and ram and is given access to the number of lives, the score, and other information from the game. Then the agent can use this to come with an action that it would send back to the ALE. The controller that is simulated contains a joystick, an action button, and a couple of menu buttons that total to about 20 possible actions including the buttons being pressed and the joystick being moved in one of eight directions.
-\\\\
-For breakout specifically there are three actions that contribute to the game: move the joystick left, move the joystick right, and do nothing.
+The Arcade Learning Environment (ALE) is a simple object-oriented framework designed to allow researchers to test Artificial Intelligence agents to play Atari 2600 games \cite{ale}. The agent can receive the game frames and ram and is given access to the number of lives, the score, and other information from the game. Then the agent can use this to come with an action that it would send back to the ALE. The controller that is simulated contains a joystick, an action button, and a couple of menu buttons that total to about 20 possible actions including the buttons being pressed and the joystick being moved in one of eight directions. \\
+
+For Breakout specifically there are three actions that contribute to the game: move the joystick left, move the joystick right, and do nothing.
 
 \subsection{Feature Extraction}
-To extract features for the basic reinforcement learning agent, we used image processing to capture the position of the paddle and ball.  See Figure \ref{breakout:fe} for a visualization of the results of the feature extraction.  While the paddle maintained one of two colors making it relatively easy to extract, the ball changes colors as it goes by each of the brick layers, taking on the color of each brick layer.  When the ball is in open space, it returns to the color of the paddle. 
+To extract features for the basic reinforcement learning agent, we used image processing to capture the position of the paddle and ball.  See Figure \ref{breakout:fe} for a visualization of the results of the feature extraction.  While the paddle maintained one of two colors making it relatively easy to extract, the ball changes colors as it goes by each of the brick layers, taking on the color of each brick layer.  When the ball is in open space, it returns to the color of the paddle. \\
 
-\begin{figure}
+\begin{figure}[H]
   \centering
-  \caption{Feature extraction performed on a frame from Breakout.  The white dots indicate the detected x and y coordinates of the paddle and ball.}
   \includegraphics[width=50mm]{tmp2.jpg}
+  \caption{Feature extraction performed on a frame from Breakout.  The white dots indicate the detected x and y coordinates of the paddle and ball.}
   \label{breakout:fe}
 \end{figure}
 
