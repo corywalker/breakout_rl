@@ -95,7 +95,7 @@ Deep Reinforment Learning is a relatively new approach to learn to control agent
 \subsection{Breakout}
 Breakout is a classic arcade game developed by Atari, Inc. Similar to pong the objective is to use a paddle to bounce a ball; however for breakout the paddle moves horizontally and is positioned at the bottom of the screen. At the top of the screen are multiple layers of bricks. Everytime the ball collides with a brick it breaks it and the player gains points. The goal of the game is to break all the bricks, score points, and not let the ball fall below the paddle as that costs the user a life. When all the lives are gone the game is over.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \caption{The Breakout setup.}
   \includegraphics[width=50mm]{tmp.jpg}
@@ -113,10 +113,7 @@ To extract features for the basic reinforcement learning agent, we used image pr
 \begin{figure}
   \centering
   \caption{Feature extraction performed on a frame from Breakout.  The white dots indicate the detected x and y coordinates of the paddle and ball.}
-  \begin{center}
   \includegraphics[width=50mm]{tmp2.jpg}
-  \end{center}
-  \includegraphics[scale=.75]{tmp2.jpg}
   \label{breakout:fe}
 \end{figure}
 
